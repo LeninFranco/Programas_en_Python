@@ -1,0 +1,58 @@
+{
+    "Papitas": {
+        "3901": {
+            "nombre": "Sabritas Original",
+            "marca": "Sabritas",
+            "precio": "14",
+            "cantidad": "100"
+        },
+        "9060": {
+            "nombre": "Doritos Nacho",
+            "marca": "Sabritas",
+            "precio": "11",
+            "cantidad": "78"
+        },
+        "9117": {
+            "nombre": "Takis Fuego",
+            "marca": "Barcel",
+            "precio": "10",
+            "cantidad": "110"
+        },
+        "1655": {
+            "nombre": "Fritos",
+            "marca": "Sabritas",
+            "precio": "11",
+            "cantidad": "80"
+        },
+        "4967": {
+            "nombre": "Ruffles",
+            "marca": "Sabritas",
+            "precio": "12",
+            "cantidad": "90"
+        },
+        "8443": {
+            "nombre": "Rancheritos",
+            "marca": "Sabritas",
+            "precio": "10",
+            "cantidad": "75"
+        },
+        "1456": {
+            "nombre": "Churrumais",
+            "marca": "Sabritas",
+            "precio": "8",
+            "cantidad": "56"
+        },
+        "6018": {
+            "nombre": "Chips Jalapeno",
+            "marca": "Barcel",
+            "precio": "13",
+            "cantidad": "86"
+        },
+        "5196": {
+            "nombre": "Runners",
+            "marca": "Barcel",
+            "precio": "10",
+            "cantidad": "92"
+        }
+    }
+}
