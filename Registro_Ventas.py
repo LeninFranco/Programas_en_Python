@@ -121,4 +121,4 @@ class RegistroVentas:
 
 
 if __name__ == "__main__":    
-    print(print("Hola Mundo"))
+    print("Hola Mundo)
