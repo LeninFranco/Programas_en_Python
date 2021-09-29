@@ -1,4 +1,4 @@
-# Importar las siguientes librerias
+# Instalar las siguientes librerias
 # 1. pip install PyMySQL
 # 2. pip install cryptography
 
