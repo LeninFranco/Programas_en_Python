@@ -1,3 +1,6 @@
+# Instalar pygame
+# pip install pygame
+
 import pygame, sys, time, random, os
 from pygame.locals import *
 
