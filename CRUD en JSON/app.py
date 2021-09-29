@@ -1,3 +1,6 @@
+# Instalar la siguiente libreria
+# pip install PyMsgBox
+
 from pymsgbox import *
 import json
 
