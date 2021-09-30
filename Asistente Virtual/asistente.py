@@ -23,7 +23,7 @@ sites = {
     "luchitas falsas": "https://latinlucha.es/"
 }
 
-#Las direcciones deben ser de tus archivos y programas que tengas instalados (Comando "inicia")
+#Las direcciones deben ser de tus archivos y programas que tengas instalados (Comando "abre")
 apps = {
     "spotify": r"C:\Users\Lenin Franco\AppData\Roaming\Spotify\Spotify.exe",
     "word": r"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE",
@@ -71,24 +71,22 @@ def run_cortana():
                 sub.call(f'start chrome.exe {sites[site]}', shell=True)
                 talk(f'Abriendo {site}')
                 return True
-    if 'inicia' in rec:
         for app in apps:
             if app in rec:
                 os.startfile(apps[app])
-                talk(f'Iniciando {app}')
+                talk(f'Abriendo {app}')
                 return True
     if 'silencio' in rec:
         print("No te escuho")
         talk("¿En que puedo ayudarte?")
         return True
     if 'apagar' in rec:
-        print("Apagando nos vemos")
-        talk("Apagando nos vemos")
+        print("Apagando, nos vemos")
+        talk("Apagando, nos vemos")
         return False
     print("No te entiendo")
     talk("No te entiendo, podrias repetir tu peticion de nuevo por favor")
     return True
-
 
 if __name__ == "__main__":
     ban = True
