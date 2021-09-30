@@ -49,8 +49,8 @@ def listen():
     try:
         with sr.Microphone() as source:
             print("Escuchando...")
-            pc = listener.listen(source, phrase_time_limit=4)
-            rec = listener.recognize_google(pc, language="es-MX")
+            pc = listener.listen(source, phrase_time_limit=5)
+            rec = listener.recognize_google(pc, language="es")
             rec = rec.lower()
             if name in rec:
                 rec = rec.replace(name,'')
