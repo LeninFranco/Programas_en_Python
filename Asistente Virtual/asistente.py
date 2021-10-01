@@ -3,10 +3,12 @@
 # 2. pip install pyttsx3
 # 3. pip install PyAudio
 # 4. pip install pywhatkit
+# 5. pip install wikipedia
 
 import speech_recognition as sr
 import pyttsx3, pywhatkit
 import subprocess as sub
+import wikipedia
 import os
 
 #Las direcciones Web deben existir (Comando "abre")
@@ -16,7 +18,6 @@ sites = {
     "youtube": "https://www.youtube.com/",
     "google": "https://www.google.com.mx/?hl=es-419",
     "whatsapp": "https://web.whatsapp.com/",
-    "wikipedia": "https://es.wikipedia.org/wiki/Wikipedia:Portada",
     "udemy": "https://www.udemy.com/",
     "cuevana": "https://cuevana3.io/",
     "repositorios": "https://github.com/",
@@ -76,6 +77,13 @@ def run_cortana():
                 os.startfile(apps[app])
                 talk(f'Abriendo {app}')
                 return True
+    if 'busca' in rec:
+        search = rec.replace('busca','')
+        wikipedia.set_lang("es")
+        wiki = wikipedia.summary(search, 1)
+        print(search + ": " + wiki)
+        talk(wiki)
+        return True
     if 'silencio' in rec:
         print("No te escuho")
         talk("¿En que puedo ayudarte?")
