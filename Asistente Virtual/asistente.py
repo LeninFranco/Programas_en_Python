@@ -1,14 +1,18 @@
-# Instalar los siguientes paquetes
+# Instalar los siguientes paquetes para el correcto funcionamiento
 # 1. pip install SpeechRecognition
 # 2. pip install pyttsx3
 # 3. pip install PyAudio
 # 4. pip install pywhatkit
 # 5. pip install wikipedia
+# 6. pip install pygame
+# 7. pip install keyboard
 
 import speech_recognition as sr
 import pyttsx3, pywhatkit
 import subprocess as sub
 import wikipedia
+from pygame import mixer
+import keyboard
 import os
 
 #Las direcciones Web deben existir (Comando "abre")
@@ -83,6 +87,26 @@ def run_cortana():
         wiki = wikipedia.summary(search, 1)
         print(search + ": " + wiki)
         talk(wiki)
+        return True
+    if 'modo sexo' in rec:
+        talk("Vete encuerando, papi")
+        while True:
+            mixer.init()
+            mixer.music.load("rolita.mp3") #Debe estar en la misma carpeta del .py
+            mixer.music.play()
+            if keyboard.read_key() == "s":
+                mixer.music.stop()
+                break
+        return True
+    if 'modo fiesta' in rec:
+        talk("¡Vamos a bailar!")
+        while True:
+            mixer.init()
+            mixer.music.load("lachona.mp3") #Debe estar en la misma carpeta del .py
+            mixer.music.play()
+            if keyboard.read_key() == "s":
+                mixer.music.stop()
+                break
         return True
     if 'silencio' in rec:
         print("No te escuho")
