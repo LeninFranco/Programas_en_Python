@@ -7,7 +7,6 @@
 import speech_recognition as sr
 import pyttsx3, pywhatkit
 import subprocess as sub
-import wikipedia
 import os
 from datetime import datetime
 
