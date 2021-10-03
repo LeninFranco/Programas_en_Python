@@ -74,6 +74,14 @@ def listen():
     except:
         return "silencio"
 
+def write(f):
+    talk("¿Qué quiere que escriba")
+    rec_write = listen()
+    f.write(rec_write + os.linesep)
+    f.close()
+    talk("Notas guardadas")
+    sub.Popen("notas.txt", shell=True)
+
 def run_cortana():
     rec = listen()
     if 'reproduce' in rec:
@@ -97,6 +105,14 @@ def run_cortana():
         search = search.split()
         sub.call('start chrome.exe https://google.com/search?q='+'+'.join(search), shell=True)
         talk("Encontre estos resultados")
+        return True
+    if 'escribe' in rec:
+        try:
+            with open("notas.txt","a") as f:
+                write(f)
+        except:
+            file = open("notas.txt","w")
+            write(file)
         return True
     if 'dime la hora' in rec:
         now = datetime.now()
