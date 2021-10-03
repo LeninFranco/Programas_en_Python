@@ -75,7 +75,7 @@ def listen():
         return "silencio"
 
 def write(f):
-    talk("¿Qué quiere que escriba")
+    talk("¿Qué quiere que escriba?")
     rec_write = listen()
     f.write(rec_write + os.linesep)
     f.close()
