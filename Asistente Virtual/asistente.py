@@ -3,17 +3,29 @@
 # 2. pip install pyttsx3
 # 3. pip install PyAudio
 # 4. pip install pywhatkit
-# 5. pip install wikipedia
-# 6. pip install pygame
-# 7. pip install keyboard
 
 import speech_recognition as sr
 import pyttsx3, pywhatkit
 import subprocess as sub
 import wikipedia
-from pygame import mixer
-import keyboard
 import os
+from datetime import datetime
+
+#Diccionario de Meses para la consulta de fechas
+months = {
+    "1": "enero",
+    "2": "febrero",
+    "3": "marzo",
+    "4": "abril",
+    "5": "mayo",
+    "6": "junio",
+    "7": "julio",
+    "8": "agosto",
+    "9": "septiembre",
+    "10": "octubre",
+    "11": "noviembre",
+    "12": "diciembre"
+}
 
 #Las direcciones Web deben existir (Comando "abre")
 sites = {
@@ -83,30 +95,17 @@ def run_cortana():
                 return True
     if 'busca' in rec:
         search = rec.replace('busca','')
-        wikipedia.set_lang("es")
-        wiki = wikipedia.summary(search, 1)
-        print(search + ": " + wiki)
-        talk(wiki)
+        search = search.split()
+        sub.call('start chrome.exe https://google.com/search?q='+'+'.join(search), shell=True)
+        talk("Encontre estos resultados")
         return True
-    if 'modo sexo' in rec:
-        talk("Vete encuerando, papi")
-        while True:
-            mixer.init()
-            mixer.music.load("rolita.mp3") #Debe estar en la misma carpeta del .py
-            mixer.music.play()
-            if keyboard.read_key() == "s":
-                mixer.music.stop()
-                break
+    if 'dime la hora' in rec:
+        now = datetime.now()
+        talk(f"Son las {now.hour} horas con {now.minute} minutos")
         return True
-    if 'modo fiesta' in rec:
-        talk("¡Vamos a bailar!")
-        while True:
-            mixer.init()
-            mixer.music.load("lachona.mp3") #Debe estar en la misma carpeta del .py
-            mixer.music.play()
-            if keyboard.read_key() == "s":
-                mixer.music.stop()
-                break
+    if 'dime la fecha de hoy' in rec:
+        now = datetime.now()
+        talk(f"Hoy es {now.day} de {months[str(now.month)]} de {now.year}")
         return True
     if 'silencio' in rec:
         print("No te escuho")
