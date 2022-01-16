@@ -4,7 +4,6 @@
 # 3. pip install PyAudio
 # 4. pip install pywhatkit
 
-import site
 from tkinter import messagebox
 from tkinter import ttk
 import speech_recognition as sr
