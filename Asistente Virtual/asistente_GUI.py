@@ -3,16 +3,19 @@
 # 2. pip install pyttsx3
 # 3. pip install PyAudio
 # 4. pip install pywhatkit
+# 5. pip install wikipedia
 
-from tkinter import messagebox
-from tkinter import ttk
-import sqlite3
-import speech_recognition as sr
-import pyttsx3, pywhatkit
-import subprocess as sub
-import os
-from datetime import datetime
-from tkinter import *
+from tkinter import messagebox #Ventanas emergentes de la libreria tkinter
+from tkinter import ttk #Extensiones de la libreria tkinter
+import sqlite3 #Manejo de bases de datos SQLite
+import speech_recognition as sr #Reconocimiento de voz
+import pyttsx3, pywhatkit #Manejo del reconocimiento de voz y reproduccion de YouTube respectivamente
+import subprocess as sub #Manejo de subprocesos
+import os #Manejo del sistema operativo con llamadas al sistema
+from datetime import datetime #Clase de tiempo
+from tkinter import * #Todos las clases de interfaz grafica de tkinter
+import wikipedia #Consultar informacion de Wikipedia
+import re #Expresiones regulares
 
 #Diccionario de Meses para la consulta de fechas
 months = {
@@ -44,17 +47,21 @@ filas = cursor.fetchall()
 apps = {fila[0]:fila[1] for fila in filas}
 sql.close()
 
+#Se nombra al asistente virtual y se instancia el reconocedor de voz y su manejador
 name = "cortana"
 listener = sr.Recognizer()
 engine = pyttsx3.init()
 
+#Se asigna una voz a la asistente virtual
 voices = engine.getProperty('voices')
 engine.setProperty('voice',voices[0].id)
 
+#Funcion que reproduce en voz un texto
 def talk(text):
     engine.say(text)
     engine.runAndWait()
 
+#Funcion que reconoce la voz y la transcribe a texto en español
 def listen():
     try:
         with sr.Microphone() as source:
@@ -68,6 +75,7 @@ def listen():
     except:
         return "silencio"
 
+#Funcion principal del asistente, ejecuta operaciones de acuerdo a un comando o palabra clave
 def run_cortana():
     while(True):
         rec = listen()
@@ -110,6 +118,20 @@ def run_cortana():
         if 'qué eres' in rec or 'eres' in rec:
             talk("Soy Cortana, un asistente virtual desarrollado en el lenguaje de programación Python")
             continue
+        if 'define' in rec:
+            search = rec.replace('define','')
+            wikipedia.set_lang("es")
+            wiki = wikipedia.summary(search,1)
+            wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+            talk(wiki)
+            continue
+        if 'explica' in rec:
+            search = rec.replace('explica','')
+            wikipedia.set_lang("es")
+            wiki = wikipedia.summary(search,1)
+            wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+            talk(wiki)
+            continue
         if 'gracias' in rec:
             talk("De nada")
             continue
@@ -121,6 +143,7 @@ def run_cortana():
             break
         talk("No te entiendo, podrias repetir tu peticion de nuevo por favor")
 
+#Ventana para añadir sitios Web a la base de datos
 def add_web_window():
     global eClaveWeb, eValorWeb
     window = Tk()
@@ -139,6 +162,7 @@ def add_web_window():
     Button(frame1,text="Agregar",command=add_web, bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W+E)
     window.mainloop()
 
+#Funcion que añade a la base de datos el sitio Web introducido por el usuario
 def add_web():
     if eClaveWeb.get().strip() != "" or eValorWeb.get().strip() != "":
         sites[eClaveWeb.get()] = eValorWeb.get()
@@ -152,6 +176,7 @@ def add_web():
     else:
         messagebox.showwarning(message="Favor de llenar todos los campos", title="ADVERTENCIA")
 
+#Ventana para añadir aplicaciones a la base de datos
 def add_app_window():
     global eClaveApp, eValorApp
     window = Tk()
@@ -170,6 +195,7 @@ def add_app_window():
     Button(frame1,text="Agregar",command=add_app, bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W+E)
     window.mainloop()
 
+#Funcion que añade a la base de datos la aplicacion introducido por el usuario
 def add_app():
     if eClaveApp.get().strip() != "" or eValorApp.get().strip() != "":
         direccion = eValorApp.get().strip()
@@ -185,6 +211,7 @@ def add_app():
     else:
         messagebox.showwarning(message="Favor de llenar todos los campos", title="ADVERTENCIA")
 
+#Ventana que muestra una tabla con los sitios Web de la base de datos
 def show_web():
     window = Tk()
     window.resizable(0,0)
@@ -197,10 +224,15 @@ def show_web():
     tabla.grid(row=0,column=0,padx=5,pady=5,columnspan=2)
     tabla.heading("#0", text="Clave o Nombre")
     tabla.heading("#1", text="URL")
+    scrollbar = ttk.Scrollbar(window)
+    scrollbar.configure(command=tabla.yview)
+    tabla.configure(yscrollcommand=scrollbar.set)
+    scrollbar.grid(row=0,column=1,padx=10,pady=10, sticky=S+E+N)
     for clave, valor in sites.items():
         tabla.insert('',0,text=clave,values=valor)
     window.mainloop()
 
+#Ventana que muestra una tabla con las aplicaciones de la base de datos
 def show_apps():
     window = Tk()
     window.resizable(0,0)
@@ -213,27 +245,21 @@ def show_apps():
     tabla.grid(row=0,column=0,padx=5,pady=5,columnspan=2)
     tabla.heading("#0", text="Clave o Nombre")
     tabla.heading("#1", text="Ruta")
+    scrollbar = ttk.Scrollbar(window)
+    scrollbar.configure(command=tabla.yview)
+    tabla.configure(yscrollcommand=scrollbar.set)
+    scrollbar.grid(row=0,column=1,padx=10,pady=10, sticky=S+E+N)
     for clave, valor in apps.items():
         tabla.insert('',0,text=clave,values=valor)
     window.mainloop()
 
-
+#Funcion Main
 if __name__ == "__main__":
     talk("Hola, soy Cortana")
     window = Tk()
     window.resizable(0,0)
     window.title("Asistente Virtual UwU")
     window.configure(bg="black")
-    frame1 = LabelFrame(window)
-    frame1.grid(row=0,column=0,padx=10,pady=10)
-    frame1.config(bg="black", foreground="white")
-    Label(frame1,text="Lista de comandos", bg="black", fg="white").grid(row=0,column=0,padx=10,pady=10,sticky=W+E)
-    Label(frame1,text="'Reproduce ???: Reproducir una canción en YouTube", bg="black", fg="white").grid(row=1,column=0,padx=5,pady=5,sticky=W+E)
-    Label(frame1,text="'Abre ???': Abrir un sitio Web o aplicacion del equipo", bg="black", fg="white").grid(row=2,column=0,padx=5,pady=5,sticky=W)
-    Label(frame1,text="'Busca ???': Realizar una busqueda en Google", bg="black", fg="white").grid(row=3,column=0,padx=5,pady=5,sticky=W)
-    Label(frame1,text="'Dime la hora': Decir la hora actual", bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W)
-    Label(frame1,text="'Dime la fecha de hoy': Decir la fecha actual", bg="black", fg="white").grid(row=5,column=0,padx=5,pady=5,sticky=W)
-    Label(frame1,text="'Apagar': Terminar la interaccion", bg="black", fg="white").grid(row=6,column=0,padx=5,pady=5,sticky=W)
     frame2 = LabelFrame(window)
     frame2.grid(row=1,column=0,padx=10,pady=10)
     frame2.config(bg="black", foreground="white")
