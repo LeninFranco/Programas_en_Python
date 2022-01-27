@@ -119,18 +119,24 @@ def run_cortana():
             talk("Soy Cortana, un asistente virtual desarrollado en el lenguaje de programación Python")
             continue
         if 'define' in rec:
-            search = rec.replace('define','')
-            wikipedia.set_lang("es")
-            wiki = wikipedia.summary(search,1)
-            wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-            talk(wiki)
+            try:
+                search = rec.replace('define','')
+                wikipedia.set_lang("es")
+                wiki = wikipedia.summary(search,1)
+                wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+                talk(wiki)
+            except:
+                talk("No te entiendo lo que solicitas")
             continue
         if 'explica' in rec:
-            search = rec.replace('explica','')
-            wikipedia.set_lang("es")
-            wiki = wikipedia.summary(search,1)
-            wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-            talk(wiki)
+            try:
+                search = rec.replace('explica','')
+                wikipedia.set_lang("es")
+                wiki = wikipedia.summary(search,1)
+                wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+                talk(wiki)
+            except:
+                talk("No te entiendo lo que solicitas")
             continue
         if 'gracias' in rec:
             talk("De nada")
