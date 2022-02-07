@@ -218,6 +218,75 @@ def add_app():
     else:
         messagebox.showwarning(message="Favor de llenar todos los campos", title="ADVERTENCIA")
 
+#Ventana para eliminar un sitio Web
+def drop_web_window():
+    global eClaveWeb
+    window = Tk()
+    window.resizable(0,0)
+    window.title("Eliminar Sitio Web")
+    window.configure(bg="black")
+    frame1 = LabelFrame(window)
+    frame1.grid(row=0,column=0,padx=10,pady=10)
+    frame1.config(bg="black", foreground="white")
+    Label(frame1,text="Nombre o Palabra Clave", bg="black", fg="white").grid(row=0,column=0,padx=5,pady=5,sticky=W+E)
+    eClaveWeb = Entry(frame1,width=50, bg="black", fg="white", insertbackground='white')
+    eClaveWeb.grid(row=1,column=0,padx=5,pady=5)
+    Button(frame1,text="Eliminar",command=drop_web, bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W+E)
+    window.mainloop()
+
+#Funcion que elimina de la base de datos un sitio web
+def drop_web():
+    if eClaveWeb.get().strip() != "":
+        clave = eClaveWeb.get()
+        sql = sqlite3.connect("AS.db")
+        cursor = sql.execute('''SELECT * FROM sitios WHERE clave=?''',(clave,))
+        sitio = cursor.fetchone()
+        if sitio != None:
+            sql.execute('''DELETE FROM sitios WHERE clave=?''',(clave,))
+            sql.commit()
+            del(sites[clave])
+            messagebox.showinfo(message="Sitio Web eliminada correctamente", title="EXITO")
+            eClaveWeb.delete(0,END)
+        else:
+            messagebox.showerror(message="No existe el sitio Web con esa clave", title="ERROR")
+        sql.close()
+    else:
+        messagebox.showwarning(message="Favor de llenar todos los campos", title="ADVERTENCIA")
+
+#Ventana para eliminar una App
+def drop_app_window():
+    global eClaveApp
+    window = Tk()
+    window.resizable(0,0)
+    window.title("Eliminar Aplicación")
+    window.configure(bg="black")
+    frame1 = LabelFrame(window)
+    frame1.grid(row=0,column=0,padx=10,pady=10)
+    frame1.config(bg="black", foreground="white")
+    Label(frame1,text="Nombre o Palabra Clave", bg="black", fg="white").grid(row=0,column=0,padx=5,pady=5,sticky=W+E)
+    eClaveApp = Entry(frame1,width=50, bg="black", fg="white", insertbackground='white')
+    eClaveApp.grid(row=1,column=0,padx=5,pady=5)
+    Button(frame1,text="Eliminar",command=drop_app, bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W+E)
+    window.mainloop()
+
+#Funcion que elimina de la base de datos un sitio web
+def drop_app():
+    if eClaveApp.get().strip() != "":
+        clave = eClaveApp.get()
+        sql = sqlite3.connect("AS.db")
+        cursor = sql.execute('''SELECT * FROM apps WHERE clave=?''',(clave,))
+        app = cursor.fetchone()
+        if app != None:
+            sql.execute('''DELETE FROM apps WHERE clave=?''',(clave,))
+            sql.commit()
+            del(apps[clave])
+            messagebox.showinfo(message="Aplicación eliminada correctamente", title="EXITO")
+        else:
+            messagebox.showerror(message="No existe la aplicación con esa clave", title="ERROR")
+        sql.close()
+    else:
+        messagebox.showwarning(message="Favor de llenar todos los campos", title="ADVERTENCIA")
+
 #Ventana que muestra una tabla con los sitios Web de la base de datos
 def show_web():
     window = Tk()
@@ -273,6 +342,8 @@ if __name__ == "__main__":
     Button(frame2,text="Iniciar", command=run_cortana, bg="black", fg="white").grid(row=0,column=0,columnspan=2,padx=5,pady=5,sticky=W+E)
     Button(frame2,text="Agregar Sitio Web", command=add_web_window, bg="black", fg="white", width=20).grid(row=1,column=0,padx=5,pady=5)
     Button(frame2,text="Agregar Aplicación", command=add_app_window, bg="black", fg="white", width=20).grid(row=1,column=1,padx=5,pady=5)
-    Button(frame2,text="Consultar Sitios Web", command=show_web, bg="black", fg="white", width=20).grid(row=2,column=0,padx=5,pady=5)
-    Button(frame2,text="Consultar Aplicaciones", command=show_apps, bg="black", fg="white", width=20).grid(row=2,column=1,padx=5,pady=5)
+    Button(frame2,text="Eliminar Sitio Web", command=drop_web_window, bg="black", fg="white", width=20).grid(row=2,column=0,padx=5,pady=5)
+    Button(frame2,text="Eliminar Aplicación", command=drop_app_window, bg="black", fg="white", width=20).grid(row=2,column=1,padx=5,pady=5)
+    Button(frame2,text="Consultar Sitios Web", command=show_web, bg="black", fg="white", width=20).grid(row=3,column=0,padx=5,pady=5)
+    Button(frame2,text="Consultar Aplicaciones", command=show_apps, bg="black", fg="white", width=20).grid(row=3,column=1,padx=5,pady=5)
     window.mainloop()
