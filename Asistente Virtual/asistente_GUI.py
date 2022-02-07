@@ -7,15 +7,15 @@
 
 from tkinter import messagebox #Ventanas emergentes de la libreria tkinter
 from tkinter import ttk #Extensiones de la libreria tkinter
+from tkinter import * #Todos las clases de interfaz grafica de tkinter
 import sqlite3 #Manejo de bases de datos SQLite
 import speech_recognition as sr #Reconocimiento de voz
 import pyttsx3, pywhatkit #Manejo del reconocimiento de voz y reproduccion de YouTube respectivamente
-import subprocess as sub #Manejo de subprocesos
 import os #Manejo del sistema operativo con llamadas al sistema
 from datetime import datetime #Clase de tiempo
-from tkinter import * #Todos las clases de interfaz grafica de tkinter
 import wikipedia #Consultar informacion de Wikipedia
 import re #Expresiones regulares
+import webbrowser as wb #Abrir sitios en el navegador por defecto
 
 #Diccionario de Meses para la consulta de fechas
 months = {
@@ -69,8 +69,6 @@ def listen():
             pc = listener.listen(source, phrase_time_limit=5)
             rec = listener.recognize_google(pc, language="es")
             rec = rec.lower()
-            if name in rec:
-                rec = rec.replace(name,'')
             return rec
     except:
         return "silencio"
@@ -78,75 +76,78 @@ def listen():
 #Funcion principal del asistente, ejecuta operaciones de acuerdo a un comando o palabra clave
 def run_cortana():
     while(True):
-        rec = listen()
-        if 'reproduce' in rec:
-            music = rec.replace('reproduce','')
-            talk("Reproduciendo " + music)
-            pywhatkit.playonyt(music)
-            continue
-        if 'abre' in rec:
-            band = False
-            for site in sites:
-                if site in rec:
-                    sub.call(f'start chrome.exe {sites[site]}', shell=True)
-                    talk(f'Abriendo {site}')
-                    band = True
-                    break
-            for app in apps:
-                if app in rec:
-                    os.startfile(apps[app])
-                    talk(f'Abriendo {app}')
-                    band = True
-                    break
-            if(not band):
-                talk("Los siento, no has agregado el sitio Web o aplicación que solicita")
-            continue
-        if 'busca' in rec:
-            search = rec.replace('busca','')
-            search = search.split()
-            sub.call('start chrome.exe https://google.com/search?q='+'+'.join(search), shell=True)
-            talk("Encontre estos resultados")
-            continue
-        if 'dime la hora' in rec:
-            now = datetime.now()
-            talk(f"Son las {now.hour} horas con {now.minute} minutos")
-            continue
-        if 'dime la fecha de hoy' in rec:
-            now = datetime.now()
-            talk(f"Hoy es {now.day} de {months[str(now.month)]} de {now.year}")
-            continue
-        if 'qué eres' in rec or 'eres' in rec:
-            talk("Soy Cortana, un asistente virtual desarrollado en el lenguaje de programación Python")
-            continue
-        if 'define' in rec:
-            try:
-                search = rec.replace('define','')
-                wikipedia.set_lang("es")
-                wiki = wikipedia.summary(search,1)
-                wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                talk(wiki)
-            except:
-                talk("No te entiendo lo que solicitas")
-            continue
-        if 'explica' in rec:
-            try:
-                search = rec.replace('explica','')
-                wikipedia.set_lang("es")
-                wiki = wikipedia.summary(search,1)
-                wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                talk(wiki)
-            except:
-                talk("No te entiendo lo que solicitas")
-            continue
-        if 'gracias' in rec:
-            talk("De nada")
-            continue
+        rec = listen() 
+        print(rec) 
+        if name in rec: 
+            rec = rec.replace(name,'') 
+            if 'reproduce' in rec: 
+                music = rec.replace('reproduce','')
+                talk("Reproduciendo " + music)
+                pywhatkit.playonyt(music)
+                continue
+            if 'abre' in rec:
+                band = False
+                for site in sites:
+                    if site in rec:
+                        wb.open(sites[site])
+                        talk(f'Abriendo {site}')
+                        band = True
+                        break
+                for app in apps:
+                    if app in rec:
+                        os.startfile(apps[app])
+                        talk(f'Abriendo {app}')
+                        band = True
+                        break
+                if(not band):
+                    talk("Los siento, no has agregado el sitio Web o aplicación que solicita")
+                continue
+            if 'busca' in rec:
+                search = rec.replace('busca','')
+                search = search.split()
+                wb.open('https://google.com/search?q='+'+'.join(search))
+                talk("Encontre estos resultados")
+                continue
+            if 'dime la hora' in rec:
+                now = datetime.now()
+                talk(f"Son las {now.hour} horas con {now.minute} minutos")
+                continue
+            if 'dime la fecha de hoy' in rec:
+                now = datetime.now()
+                talk(f"Hoy es {now.day} de {months[str(now.month)]} de {now.year}")
+                continue
+            if 'qué eres' in rec or 'eres' in rec:
+                talk("Soy " + name + ", un asistente virtual desarrollado en el lenguaje de programación Python")
+                continue
+            if 'define' in rec:
+                try:
+                    search = rec.replace('define','')
+                    wikipedia.set_lang("es")
+                    wiki = wikipedia.summary(search,1)
+                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+                    talk(wiki)
+                except:
+                    talk("No te entiendo lo que solicitas")
+                continue
+            if 'explica' in rec:
+                try:
+                    search = rec.replace('explica','')
+                    wikipedia.set_lang("es")
+                    wiki = wikipedia.summary(search,1)
+                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+                    talk(wiki)
+                except:
+                    talk("No te entiendo lo que solicitas")
+                continue
         if 'silencio' in rec:
             talk("No te escucho, ¿en que puedo ayudarte?")
             continue
+        if 'gracias' in rec:
+                talk("No hay de que")
+                continue
         if 'apagar' in rec or 'adiós' in rec:
-            talk("Apagando, nos vemos")
-            break
+                talk("Apagando, nos vemos")
+                break
         talk("No te entiendo, podrias repetir tu peticion de nuevo por favor")
 
 #Ventana para añadir sitios Web a la base de datos
