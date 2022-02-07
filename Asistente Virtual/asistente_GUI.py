@@ -269,7 +269,7 @@ def drop_app_window():
     Button(frame1,text="Eliminar",command=drop_app, bg="black", fg="white").grid(row=4,column=0,padx=5,pady=5,sticky=W+E)
     window.mainloop()
 
-#Funcion que elimina de la base de datos un sitio web
+#Funcion que elimina de la base de datos una app
 def drop_app():
     if eClaveApp.get().strip() != "":
         clave = eClaveApp.get()
