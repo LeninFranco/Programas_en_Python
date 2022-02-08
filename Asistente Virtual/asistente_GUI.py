@@ -139,16 +139,18 @@ def run_cortana():
                 except:
                     talk("No te entiendo lo que solicitas")
                 continue
-        if 'silencio' in rec:
-            talk("No te escucho, ¿en que puedo ayudarte?")
+            talk("No te entiendo, podrias repetir tu peticion de nuevo por favor")
+        if 'hola' in rec:
+            talk("Hola, un gusto")
             continue
         if 'gracias' in rec:
-                talk("No hay de que")
-                continue
+            talk("A sus ordenes")
+            continue
         if 'apagar' in rec or 'adiós' in rec:
-                talk("Apagando, nos vemos")
-                break
-        talk("No te entiendo, podrias repetir tu peticion de nuevo por favor")
+            talk("Apagando, nos vemos")
+            break
+        if 'silencio' in rec:
+            continue
 
 #Ventana para añadir sitios Web a la base de datos
 def add_web_window():
