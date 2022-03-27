@@ -1,0 +1,16 @@
+{% extends "template.html" %}
+
+{% block content %}
+<div class="mb-3">
+    <h2>{{titulo}}</h2>
+</div>
+<div class="mb-3">
+    <img class="mx-auto d-block" src="{{url_for('static',filename='img/doge_bailando_piola.gif')}}">
+</div>
+<div class="mb-3">
+    <h2>Los lenguajes de programación que manejo son: </h2>
+    {% for l in lista %}
+        <p>{{l}}</p>
+    {% endfor %}
+</div>
+{% endblock %}
