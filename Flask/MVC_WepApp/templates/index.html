@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Productos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">MVC de Productos</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row pt-4">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-{{messages[0]}} alert-dismissible fade show" role="alert">
+                {{messages[1]}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="row pt-4">
+            <div class="col-sm-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-header">Producto</div>
+                    <div class="card-body">
+                        <form action="/add" method="post">
+                            <div class="mb-3">
+                                <input type="text" name="idProduct" class="form-control" placeholder="ID del Producto" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" name="nombre" class="form-control" placeholder="Nombre del Producto" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="number" name="precio" class="form-control" min="0" value="0.00" step=".01" required>
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-secondary w-100">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <table class="table table-primary">
+                    <thead>
+                        <th>ID Producto</th>
+                        <th>Nombre Producto</th>
+                        <th>Precio Producto</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr>
+                            <td>{{producto.ID}}</td>
+                            <td>{{producto.nombre}}</td>
+                            <td>{{producto.precio}}</td>
+                            <td>
+                                <a href="/delete/{{producto.ID}}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                <a href="/edit/{{producto.ID}}" class="btn btn-success"><i class="fa-solid fa-pen"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/confirm.js')}}"></script>
+</body>
+
+</html>
