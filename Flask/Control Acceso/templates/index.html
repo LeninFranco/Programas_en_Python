@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center pt-5 mt-5 mr-1">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-body text-center">
+                        <div class="mb-3 text-center text-white">
+                            <h2>¡Bienvenido!</h2>
+                        </div>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-{{messages[0]}} alert-dismissible fade show" role="alert">
+                            {{messages[1]}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        <form action="/login" method="post">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white"><i
+                                                class="fa-solid fa-user"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="user"
+                                        placeholder="Ingrese su nombre de usuario" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-white"><i class="fa-solid fa-key"></i></span>
+                                    </div>
+                                    <input type="password" class="form-control form-control-sm" name="pass"
+                                        placeholder="Ingrese su contraseña" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" class="form-control bg-dark text-white">Iniciar Sesión</button>
+                            </div>
+                        </form>
+                        <div class="mb-3">
+                            <a href="/crearCuenta" class="text-white">Crear una cuenta</a>
+                        </div>
+                        <div class="mb-3">
+                            <a href="/recuperarContrasena" class="text-white">Recuperar contraseña</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+</body>
+
+</html>
