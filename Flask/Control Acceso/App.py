@@ -9,6 +9,8 @@ app = Flask(__name__)
 
 app.secret_key = 'mykey'
 
+temp_token = None
+
 @app.route('/')
 def index():
     if "username" in session:
@@ -29,15 +31,15 @@ def login():
         if fila == None:
             flash('danger')
             flash('Usuario o Contraseña incorrectos')
-            return redirect('/')
+            return redirect(url_for('index'))
         else:
             session["username"] = username
-            return redirect('/home')
+            return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/home')
 def home():
@@ -68,7 +70,7 @@ def guardarCuenta():
         conn.close()
         flash('success')
         flash('Cuenta Creada Correctamente')
-        return redirect('/')
+        return redirect(url_for('index'))
 
 @app.route('/recuperarContrasena')
 def recuperarContrasena():
@@ -78,7 +80,7 @@ def recuperarContrasena():
         return render_template('reset.html')
 
 def getToken(userid):
-    serial = Serializer('mykey',300)
+    serial = Serializer('mykey',120)
     return serial.dumps({'user_id':userid}).decode('utf-8')
 
 def verifyToken(token):
@@ -136,18 +138,23 @@ def changePassword():
         if fila == None:
             flash('danger')
             flash('No hay ningun usuario con ese correo')
-            return redirect('/recuperarContrasena')
+            return redirect(url_for('index'))
         else:
             flash('success')
             flash('Se ha enviado un correo para la recuperación de su contraseña')
             sendMail(fila)
-            return redirect('/recuperarContrasena')
+            return redirect(url_for('index'))
 
 @app.route('/changePassword/<token>')
 def resetPassword(token):
+    global temp_token
+    serial = Serializer('mykey')
     user = verifyToken(token)
+    temp_token = serial.loads(token)['user_id']
     if user == None:
-        return redirect(url_for('recuperarContrasena'))
+        flash('danger')
+        flash('Se expiró la recuperación de contrasña con ese Token')
+        return redirect(url_for('index'))
     else:
         return render_template('changePassword.html')
 
@@ -158,11 +165,11 @@ def updatePassword():
         hashPassword = md5(password.encode())
         conn = pymysql.connect(host='localhost', port=3306, user='root', password='P0L1m4s7er!', db='crypto')
         cursor = conn.cursor()
-        cursor.execute("UPDATE usuarios SET passUsuario=%s",(hashPassword.hexdigest(),))
+        cursor.execute("UPDATE usuarios SET passUsuario=%s WHERE idUsuario=%s",(hashPassword.hexdigest(),temp_token))
         conn.commit()
         cursor.close()
         conn.close()
-        return redirect('/')
+        return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(port=3000, debug=True)
