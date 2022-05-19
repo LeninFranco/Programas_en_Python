@@ -74,91 +74,110 @@ def listen():
     except:
         return "silencio"
 
+#Función para reproducir música
+def playMusic(rec):
+    music = rec.replace('reproduce','')
+    talk("Reproduciendo " + music)
+    pywhatkit.playonyt(music)
+
+#Función para abrir una aplicación o sitio Web
+def openAppWeb(rec):
+    band = False
+    for site in sites:
+        if site in rec:
+            wb.open(sites[site])
+            talk(f'Abriendo {site}')
+            band = True
+            break
+    for app in apps:
+        if app in rec:
+            os.startfile(apps[app])
+            talk(f'Abriendo {app}')
+            band = True
+            break
+    if(not band):
+        talk("Los siento, no has agregado el sitio Web o aplicación que solicita")
+
+#Función para realizar una búsqueda en Google en el navegador
+def googleSearch(rec):
+    search = rec.replace('busca','')
+    search = search.split()
+    wb.open('https://google.com/search?q='+'+'.join(search))
+    talk("Encontre estos resultados")
+
+#Función para obtener la fecha y la hora
+def getDate(datetype):
+    now = datetime.now()
+    if datetype == "hora":
+        talk(f"Son las {now.hour} horas con {now.minute} minutos")
+    elif datetype == "fecha":
+        talk(f"Hoy es {now.day} de {months[str(now.month)]} de {now.year}")
+    else:
+        talk("No se que hacer")
+
+#Función para explicar una definición, personaje, explicación de wikipedia
+def wikipediaSearch(rec, question):
+    if question == "define":
+        search = rec.replace('define','')
+        getWikipediaInfo(search)
+    elif question == "explica":
+        search = rec.replace('explica','')
+        getWikipediaInfo(search)
+    elif question == "qué es":
+        search = rec.replace('qué es','')
+        getWikipediaInfo(search)
+    elif question == "quién es":
+        search = rec.replace('quién es','')
+        getWikipediaInfo(search)
+    else:
+        talk("No se que hacer")
+
+#Obtiene información en la API de Wikipedia
+def getWikipediaInfo(search):
+    try:
+        wikipedia.set_lang("es")
+        wiki = wikipedia.summary(search,2)
+        wiki = re.sub(r'\[[\w\s]+\]','',wiki)
+        talk(wiki)
+    except:
+        talk("No te entiendo lo que solicitas")
+
 #Funcion principal del asistente, ejecuta operaciones de acuerdo a un comando o palabra clave
-def run_iris():
+def runIris():
     while(True):
         rec = listen() 
         print(rec) 
         if name in rec: 
             rec = rec.replace(name,'') 
             if 'reproduce' in rec: 
-                music = rec.replace('reproduce','')
-                talk("Reproduciendo " + music)
-                pywhatkit.playonyt(music)
+                playMusic(rec)
                 continue
             if 'abre' in rec:
-                band = False
-                for site in sites:
-                    if site in rec:
-                        wb.open(sites[site])
-                        talk(f'Abriendo {site}')
-                        band = True
-                        break
-                for app in apps:
-                    if app in rec:
-                        os.startfile(apps[app])
-                        talk(f'Abriendo {app}')
-                        band = True
-                        break
-                if(not band):
-                    talk("Los siento, no has agregado el sitio Web o aplicación que solicita")
+                openAppWeb(rec)
                 continue
             if 'busca' in rec:
-                search = rec.replace('busca','')
-                search = search.split()
-                wb.open('https://google.com/search?q='+'+'.join(search))
-                talk("Encontre estos resultados")
+                googleSearch(rec)
                 continue
             if 'dime la hora' in rec:
-                now = datetime.now()
-                talk(f"Son las {now.hour} horas con {now.minute} minutos")
+                getDate("hora")
                 continue
             if 'dime la fecha de hoy' in rec:
-                now = datetime.now()
-                talk(f"Hoy es {now.day} de {months[str(now.month)]} de {now.year}")
+                getDate("fecha")
                 continue
             if 'qué eres' in rec or 'eres' in rec:
                 talk("Soy " + name + ", un asistente virtual desarrollado en el lenguaje de programación Python")
                 continue
             if 'define' in rec:
-                try:
-                    search = rec.replace('define','')
-                    wikipedia.set_lang("es")
-                    wiki = wikipedia.summary(search,1)
-                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                    talk(wiki)
-                except:
-                    talk("No te entiendo lo que solicitas")
+                wikipediaSearch(rec,"define")
                 continue
             if 'explica' in rec:
-                try:
-                    search = rec.replace('explica','')
-                    wikipedia.set_lang("es")
-                    wiki = wikipedia.summary(search,1)
-                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                    talk(wiki)
-                except:
-                    talk("No te entiendo lo que solicitas")
+                wikipediaSearch(rec,"explica")
                 continue
             if 'qué es' in rec:
-                try:
-                    search = rec.replace('qué es','')
-                    wikipedia.set_lang("es")
-                    wiki = wikipedia.summary(search,1)
-                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                    talk(wiki)
-                except:
-                    talk("No te entiendo lo que solicitas")
+                wikipediaSearch(rec,"qué es")
                 continue
             if 'quién es' in rec:
-                try:
-                    search = rec.replace('quién es','')
-                    wikipedia.set_lang("es")
-                    wiki = wikipedia.summary(search,1)
-                    wiki = re.sub(r'\[[\w\s]+\]','',wiki)
-                    talk(wiki)
-                except:
-                    talk("No te entiendo lo que solicitas")
+                wikipediaSearch(rec,"quién es")
                 continue
             if 'cuánto' in rec:
                 talk(sm.getResult(rec))
@@ -354,7 +373,7 @@ if __name__ == "__main__":
     window.title("Asistente Virtual UwU")
     frame2 = LabelFrame(window)
     frame2.grid(row=1,column=0,padx=10,pady=10)
-    Button(frame2,text="Iniciar", command=run_iris).grid(row=0,column=0,columnspan=2,padx=5,pady=5,sticky=W+E)
+    Button(frame2,text="Iniciar", command=runIris).grid(row=0,column=0,columnspan=2,padx=5,pady=5,sticky=W+E)
     Button(frame2,text="Agregar Sitio Web", command=add_web_window, width=20).grid(row=1,column=0,padx=5,pady=5)
     Button(frame2,text="Agregar Aplicación", command=add_app_window, width=20).grid(row=1,column=1,padx=5,pady=5)
     Button(frame2,text="Eliminar Sitio Web", command=drop_web_window, width=20).grid(row=2,column=0,padx=5,pady=5)

@@ -1,11 +1,3 @@
-'''
-    Description:
-    Perform voice operations in Spanish with Python.
-
-    Author: AlejandroV
-    Version: 0.0.5
-    Video: https://youtu.be/uWqnGSVdPPg
-'''
 from math import *
 
 def getEquation(equation):
