@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<div class="row pt-2">
+    <div class="col-12" style="padding: 12px 12px 12px 12px;">
+        <div class="card text-white bg-dark">
+            <div class="card-header">Song Data</div>
+            <div class="card-body">
+                <form action="/updateSong" method="POST" id="formulario">
+                    <div class="mb-3">
+                        <input type="text" name="idSong" class="form-control" placeholder="Song ID" value="{{song.id}}" autocomplete="off"
+                            readonly>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="name" class="form-control" placeholder="Name" value="{{song.name}}" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="artist" class="form-control" placeholder="Artist" value="{{song.artist}}" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" name="save" class="btn btn-secondary w-100">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

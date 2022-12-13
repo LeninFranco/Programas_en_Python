@@ -1,0 +1,68 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<div class="row pt-2">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-{{messages[0]}} alert-dismissible fade show" role="alert">
+        {{messages[1]}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row pt-2">
+    <div class="col-lg-4 col-sm-12" style="padding: 12px 12px 12px 12px;">
+        <div class="card text-white bg-dark">
+            <div class="card-header">Song Data</div>
+            <div class="card-body">
+                <form action="/addSong" method="POST" id="formulario">
+                    <div class="mb-3">
+                        <input type="text" name="idSong" class="form-control" placeholder="Song ID" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="name" class="form-control" placeholder="Name" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="artist" class="form-control" placeholder="Artist" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" name="save" class="btn btn-secondary w-100">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-sm-12" style="padding: 12px 12px 12px 12px;">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Artist</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <td>{{song.id}}</td>
+                    <td>{{song.name}}</td>
+                    <td>{{song.artist}}</td>
+                    <td>
+                        <a href="/editSong/{{song.id}}" class="btn btn-success">Update</a>
+                        <a href="/deleteSong/{{song.id}}" class="btn btn-danger btn-delete">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
